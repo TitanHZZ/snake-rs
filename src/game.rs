@@ -38,8 +38,8 @@ impl Game {
         if self.food == None {
             // brute force the new position for the food (not really a good approach)
             // a better approach would be to create a map of possible positions and choose one of those
-            let mut x: u64 = thread_rng().gen_range(1..WINDOW_SIZE as u64);
-            let mut y: u64 = thread_rng().gen_range(1..WINDOW_SIZE as u64);
+            let mut x: u64 = thread_rng().gen_range((BORDER_WIDTH as u64 * 2)..WINDOW_SIZE as u64 - 1);
+            let mut y: u64 = thread_rng().gen_range((BORDER_WIDTH as u64 * 2)..WINDOW_SIZE as u64 - 1);
 
             while self.snake.overlaps_with(x, y) || self.food == Some(Position{x, y}) {
                 x = thread_rng().gen_range(1..WINDOW_SIZE as u64);
@@ -49,6 +49,7 @@ impl Game {
             self.food = Some(Food{x, y});
         }
 
+        // move the snake if the time has come
         self.delay += dt;
         if self.delay >= WAITING_TIME {
             self.delay = 0.0;
@@ -72,14 +73,14 @@ impl Game {
     }
 
     pub fn draw(&self, ctx: &Context, g: &mut G2d) {
+        // draw the snake
+        self.snake.draw(ctx, g);
+
         // draw the game border
         draw_rectangle!(BORDER_COLOR, 0.0, 0.0, WINDOW_SIZE * BLOCK_SIZE, BORDER_WIDTH, ctx, g);
         draw_rectangle!(BORDER_COLOR, 0.0, 0.0, BORDER_WIDTH, WINDOW_SIZE * BLOCK_SIZE, ctx, g);
         draw_rectangle!(BORDER_COLOR, WINDOW_SIZE - BORDER_WIDTH, 0.0, WINDOW_SIZE, BORDER_WIDTH, ctx, g);
         draw_rectangle!(BORDER_COLOR, 0.0, WINDOW_SIZE - BORDER_WIDTH, BORDER_WIDTH, WINDOW_SIZE, ctx, g);
-
-        // draw the snake
-        self.snake.draw(ctx, g);
 
         // draw the food
         if let Some(f) = self.food {

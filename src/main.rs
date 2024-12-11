@@ -22,13 +22,13 @@ fn main() {
             game.key_pressed(key);
         }
 
+        e.update(|arg|
+            game.update(arg.dt).expect("Could not move the snake")
+        );
+
         window.draw_2d(&e, |ctx, g, _gfx| {
             clear(BLACK, g);
             game.draw(&ctx, g);
         });
-
-        e.update(|arg|
-            game.update(arg.dt).expect("Could not move the snake")
-        );
     }
 }

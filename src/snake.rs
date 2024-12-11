@@ -1,7 +1,7 @@
 use std::collections::LinkedList;
 use piston_window::{types::Color, Context, G2d};
 use crate::draw_rectangle;
-use crate::game::{Food, Position};
+use crate::game::{Food, Position, BORDER_WIDTH, WINDOW_SIZE};
 
 const SNAKE_COLOR: Color = [0.0, 0.8, 0.0, 1.0];
 
@@ -72,6 +72,15 @@ impl Snake {
         if overlap {
             // the snake's head has hit it's own body (the player has lost)
             return Err("The snake's head has hit it's body!");
+        }
+
+        // check collision with the border
+        let hit_left_border   = self.body.iter().any(|body_part| body_part.x == BORDER_WIDTH as u64 - 1);
+        let hit_top_border    = self.body.iter().any(|body_part| body_part.y == BORDER_WIDTH as u64 - 1);
+        let hit_right_border  = self.body.iter().any(|body_part| body_part.x == WINDOW_SIZE as u64 - 1);
+        let hit_bottom_border = self.body.iter().any(|body_part| body_part.y == WINDOW_SIZE as u64 - 1);
+        if hit_left_border || hit_top_border || hit_right_border || hit_bottom_border{
+            return Err("The snake has hit the border!");
         }
 
         // determine the position for the new head
