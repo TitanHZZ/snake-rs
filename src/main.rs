@@ -2,9 +2,10 @@ use piston_window::UpdateEvent;
 use piston_window::{clear, color::BLACK, PistonWindow, WindowSettings, Button, PressEvent};
 use game::{BLOCK_SIZE, WINDOW_SIZE};
 use game::Game;
+
+mod snake;
 mod draw;
 mod game;
-mod snake;
 
 fn main() {
     let mut window: PistonWindow = WindowSettings::new(
